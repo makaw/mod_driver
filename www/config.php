@@ -13,11 +13,9 @@
   $DB_USER = 'somado';
   $DB_PASS = 'somado';
   $DB_NAME = 'somado_driver';
-  
 
   // Pełny URL do serwisów
-  $SERVICES_URL = 'http://localhost/mod_driver/services/';
-  
+  $SERVICES_URL = "http://".$_SERVER['HTTP_HOST'].'/mod_driver/services/';
   
   //-------------------------------------------------------------------------
   

@@ -10,7 +10,7 @@ Login: drv1 / drv2 / drv3 / drv4
 Hasło: 12345
 
 ----------
-Konfiguracja: www/config.php (do ustawienia: dostęp do bazy danych, pełny URL do serwisów)
+Konfiguracja: www/config.php (do ustawienia: dostęp do bazy danych, ew. zmiana pełnego URL do serwisów)
 
 Załączona baza danych (plik: mod_driver_mysql.zip) zawiera przykładowe trasy wyeksportowane z projektu Somado oraz konta użytkowników: drv1, drv2, drv3, drv4 (hasło: 12345).
 

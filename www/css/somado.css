@@ -1,0 +1,43 @@
+
+#deliveryDetails p {
+	margin-top: 0px;
+	margin-bottom: 8px;
+}
+
+#ordersList {
+	clear: both;
+}
+
+#userInfo {
+
+  font-size: small;
+
+}
+
+.ui-icon-user {
+	background-image: url("images/user-white.svg");
+}
+
+#userInfo a { 
+  text-decoration: none; 
+  color: #aeaeae;
+}
+
+
+#userInfo a:hover, a:active {
+  text-decoration:none;
+  color: #eaeaea;
+}
+
+
+#map {
+	height:99%;
+    margin-bottom:10px !important;
+    margin-top:3px !important;
+}
+
+.login_error {
+
+  color: red;
+
+}

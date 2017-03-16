@@ -21,15 +21,22 @@
 
   $tpl = new Templates();
   $user = new User();
-  if (!$user->isAuthorized()) {
-	  	
-	$err = isset($_GET['l']) && $_GET['l']==1;  	
-	echo $tpl->tplLoginForm($err);
-	die();  
-	  
+
+  $act = isset($_REQUEST['act']) ? $_REQUEST['act'] : "";
+  if ($act == "out") {
+  	$user->logOut();
+  	header("Location: index.php");
+  	die();
   }
   
-  $act = isset($_REQUEST['act']) ? $_REQUEST['act'] : "";
+  if (!$user->isAuthorized()) {
+  	$err = $user->isAuthError();
+  	$user->unsetAuthError();
+  	echo $tpl->tplLoginForm($err);
+  	die();
+  	 
+  }
+  
   $id = isset($_REQUEST['id']) ? (int)$_REQUEST['id'] : 0;
   
   switch ($act) {

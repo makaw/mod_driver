@@ -10,8 +10,27 @@
 // Identyfikator (BD) dostawy
 var delivery_id;
 
+$('#detailsPage').live('pagecreate', function(event) {
+	
+	$.mobile.loadingMessage = "Proszę czekać ...";	
+	
+	$('.show-page-loading-msg').bind( "click", function() {
+		$.mobile.showPageLoadingMsg();
+	})
+	
+	$.getJSON(serviceURL + 'get_user_info.php', function(data) {
+		
+      $('#detailsPage #userInfo').empty();		
+	  $('#detailsPage #userInfo').append('<span class="ui-icon ui-icon-user" style="display: inline-block; vertical-align:middle"/> '
+	   + data.items.user_info + '<br /><a href="index.php?act=out" style="float:right">[wyloguj]</a>');
+		
+	});	
+	
+});
+
+
 $('#detailsPage').live('pageshow', function(event) {
-	delivery_id = getUrlVars()["id"];
+	delivery_id = getUrlVars()['id'];
 	$.getJSON(serviceURL + 'get_deliveries.php?id='+delivery_id, displayDelivery);	
 	$.getJSON(serviceURL + 'get_orders.php?id='+delivery_id, displayOrders);
 });
@@ -21,9 +40,9 @@ $('#detailsPage').live('pageshow', function(event) {
 function displayDelivery(data) {
 	
   var delivery = data.items;
-  $('#deliveryDate').text('Dostawa #' + delivery.id + ' z dn. ' + delivery.delivery_date);	
-  $('#vehicleDesc').text(delivery.vehicle_desc);
-  $('#returnToDepot').text('Powrót do magazynu: ' + (delivery.return_to_depot == 1 ? 'Tak' : 'Nie'));
+  $('#detailsPage #deliveryDate').text('Dostawa #' + delivery.id + ' z dn. ' + delivery.delivery_date);	
+  $('#detailsPage #vehicleDesc').text(delivery.vehicle_desc);
+  $('#detailsPage #returnToDepot').text('Powrót do magazynu: ' + (delivery.return_to_depot == 1 ? 'Tak' : 'Nie'));
   
 }
 
@@ -34,17 +53,17 @@ function displayOrders(data) {
   var orders = data.items;
   sep = ' &nbsp; &nbsp; ';
   
-  $('#ordersList').empty();
+  $('#detailsPage #ordersList').empty();
   
   if (orders.length == 0) {
-	$('#ordersList').append('<p style="color:red"><br/>Błąd: brak zamówień.</p>');	
+	$('#detailsPage #ordersList').append('<p style="color:red"><br/>Błąd: brak zamówień.</p>');	
 	return;		
   }
   
  
   $.each(orders, function(index, order) {	
 
-	$('#ordersList').append('<li data-icon="check">' + 
+	$('#detailsPage #ordersList').append('<li data-icon="check">' + 
 	(order.customer_label=='M' || order.done=='1' ? '' : '<a id="confirm_' + order.customer_label + 
 	'" data-id="' + order.id +'" data-number="' + order.order_number + '">') +
 	 '<h3>' + order.customer_label + ') '
@@ -63,24 +82,11 @@ function displayOrders(data) {
   
   
 	
-  $('#ordersList').listview('refresh');
+  $('#detailsPage #ordersList').listview('refresh');
 	
 
 }
 
-
-// Pobranie parametrów z bieżącego URL-a
-function getUrlVars() {
-    var vars = [], hash;
-    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-    for(var i = 0; i < hashes.length; i++)
-    {
-        hash = hashes[i].split('=');
-        vars.push(hash[0]);
-        vars[hash[0]] = hash[1];
-    }
-    return vars;
-}
 
 
 // Okno z potwierdzeniem zmiany stanu

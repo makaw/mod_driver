@@ -19,6 +19,11 @@ class Templates {
   private $serviceURL;
   private $tmsURL;
   
+  private $id = 0; 
+  
+  private $error = '';
+  
+  
   public function __construct() {
 	  
 	require("../www/config.php");
@@ -26,7 +31,7 @@ class Templates {
 	$this->serviceURL = $SERVICES_URL;
 	$this->tmsURL = $TMS_URL;
 
-	$this->header = self::pageHeader();  
+	$this->header = $this->pageHeader();  
 	  
 	$this->footer = $this->pageFooter();
 	  
@@ -34,7 +39,7 @@ class Templates {
 
 
 /* Nagłówek strony WWW */
-private static function pageHeader() {
+private function pageHeader() {
 	
 return <<<EOF
 <!DOCTYPE HTML>
@@ -63,6 +68,7 @@ return <<<EOF
 var serviceURL = '{$this->serviceURL}';
 var tmsURL = '{$this->tmsURL}';
 </script>
+<script src="js/login_form.js"></script>
 <script src="js/deliveries_list.js"></script>
 <script src="js/delivery_details.js"></script>
 <script src="js/zebra_dialog.js"></script>
@@ -82,27 +88,7 @@ EOF;
 /** Szablon listy dostaw */
 public function tplDeliveriesList() {
 	
-  return <<<EOF
-{$this->header}
-
-<div id="deliveriesListPage" data-role="page" >
-
-	<div data-role="header" data-position="fixed">	
-		
-		<div style="float:left"><h3 style="float:left"> &nbsp; Lista dostaw</h3></div>
-		<div id="userInfo" style="float:right" data-role="content"></div> 
-	</div>
-
-	<div data-role="content">
-         <ul id="deliveriesList" data-role="listview" data-filter="true" data-filter-placeholder="Filtruj treść ..."></ul>
-    </div>		
-
-</div>
-
-{$this->footer}
-EOF;
-  	
-	
+  return $this->readTemplate('deliveries_list.php');
 	
 }
 
@@ -110,79 +96,20 @@ EOF;
 /** Szablon szczegółów dostawy i listy zamówień */
 public function tplDeliveryDetails($id) {
 	
+
+  $this->id = $id;
 	
-  return <<<EOF
-{$this->header}
-
-<div id="detailsPage" data-role="page">
-
-	<div data-role="header">		
-		<div id="bback" onclick="window.location.replace('index.php?act=dl')" data-icon="back"
-		 data-role="button" class="ui-btn-left">Powrót</div>
-		<a id="bmap"  onclick="window.location.replace('index.php?act=dm&id={$id}')" data-icon="star"
-		 data-role="button" class="ui-btn-right">Mapa</a>
-		<h1>Szczegóły</h1>
-	</div>
-
-  <div data-role="content"> 
-
-	<div id="deliveryDetails">
-       <h3 id="deliveryDate">&nbsp; </h3>       
-       <p id="vehicleDesc"></p>
-       <p id="returnToDepot"></p>
-   	</div>
-	 
-    <ul id="ordersList" data-role="listview" data-inset="true"></ul>
-
-  </div>
-
-</div>
-
-{$this->footer}
-EOF;
-  	
+  return $this->readTemplate('delivery_details.php');
 		
 }
 
 
 /** Wyświetlanie mapy z trasą */
-public function tplDeliveryDetailsMap($id) {	
+public function tplDeliveryDetailsMap($id) {		
 	
-  $header = str_replace("</head>", "", $this->header);
-  $header = str_replace("<body>", "", $header);
-	
-  return <<<EOF
-{$header}
-<style>
-.ui-content {
-    position: absolute;
-    top: 40px;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    padding: 0 !important;
-}
-</style>
-</head>
-<body>
-
-<div id="mapPage" data-role="page">
-
-	<div data-role="header">		
-		<div id="bback" onclick="window.location.replace('index.php?act=dd&id={$id}')" data-icon="back"
-		 data-role="button" class="ui-btn-left">Powrót</div>
-		<h1>Szczegóły</h1>
-	</div>
-	
-	<div data-role="content">
-        <div id="map"></div>
-    </div>    
-
-</div>
-
-{$this->footer}
-EOF;
-  	
+  $this->id = $id;
+  
+  return $this->readTemplate('map_route.php');
 		
 }
 
@@ -190,88 +117,27 @@ EOF;
 
 /** Szablon formularza logowania */
 public function tplLoginForm($err = false) {
-	
-  $error = !$err ? '' : '<div class="login_error">Nieprawidłowy login lub hasło.</div>';
-	
-	
-return <<<EOF
-{$this->header}
-        
-<div data-role="page">
 
-<div data-role="header" data-position="fixed">
-  <h1>Somado mod_driver</h1>
-</div>
+	$this->error = !$err ? '' : '<div class="login_error">Nieprawidłowy login lub hasło.</div>';
 
-<div id="loginForm" style="text-align:center" data-role="content">
-
-<form action="loader.php" method="post" class="ui-body ui-body-b ui-corner-all" onsubmit="$.post('index.php', this.serialize(), checkForm);">
-  <div data-role="content" class="ui-grid-b"> 
-	
-	
-	<div class="ui-block" style="text-align:center">
-	
-	{$error}
-	<div data-role="fieldcontain">
-		<label for="u_login" class="alignleft">Login:</label> 
-		<input id="u_login" name="u_login" placeholder="" type="text">
-	</div>
-	
-	<div data-role="fieldcontain">
-		<label for="u_pass" class="alignleft">Hasło:</label>
-		<input id="u_pass" name="u_pass" value="" type="password">
-	</div>
-
-	<br/>
-	<button type="submit" class="alignleft" data-theme="a" data-icon="check" name="submit" value="submit-value">Zaloguj się</button>
-	
-	</div>		
-	
-  </div>
-</form>  
-
-<p align="right" style="font-size: 11px">
-<a href="https://github.com/makaw/mod_driver">https://github.com/makaw/mod_driver</a>
-</p>
-
-
-</div>
-</div>
-
-<script>
-function checkForm(data) {
-
-  $('loginForm').empty();
-  return true;
+	return $this->readTemplate('login_form.php');
 
 }
-</script>
-	
-{$this->footer}
-EOF;
-	
-	
-	
-	
-}
 
 
 
-public function tplLoader() {
-	
-return <<<EOF
-<!DOCTYPE HTML>
-<html>
-<head>
-<meta charset="utf8"/>
-</head><body>
-Proszę czekać ...
-<script>
-window.location.replace('index.php?l=1');
-</script>  	
-</body></html>
-EOF;
+private function readTemplate($file) {
 
+	$error = $this->error;
+	$id = $this->id;
+	
+	ob_start();
+	require 'templates/'.$file;
+	$R = ob_get_contents();
+	ob_end_clean();
+	
+	return $this->header . $R . $this->footer;
+	
 }
 
 

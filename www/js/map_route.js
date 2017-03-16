@@ -6,10 +6,41 @@
  * 
  */
  
- 
+var debug = false;
+
+
+$('#mapPage').live('pagecreate', function(event) {
+	
+	$.mobile.loadingMessage = "Proszę czekać ...";	
+	
+	$('.show-page-loading-msg').bind( "click", function() {
+		$.mobile.showPageLoadingMsg();
+	})
+	
+	$.getJSON(serviceURL + 'get_user_info.php', function(data) {
+		
+      $('#mapPage #userInfo').empty();		
+	  $('#mapPage #userInfo').append('<span class="ui-icon ui-icon-user" style="display: inline-block; vertical-align:middle"/> '
+	   + data.items.user_info + '<br /><a href="index.php?act=out" style="float:right">[wyloguj]</a>');
+		
+	});	
+	
+});
+
 
 $('#mapPage').live('pageshow', function(event) { 	
 
+
+	$('#mapPage #map').css({
+	    position: 'absolute',
+	    top: $('#mapPage #mpHeader').outerHeight(),
+	    right: '0',
+	    bottom: '0',
+	    left: '0',
+	    padding: '0 !important'
+	});
+	
+	
     var map = L.map('map');
 
     // tmsURL + '?z={z}&x={x}&y={y}'
@@ -73,7 +104,7 @@ $('#mapPage').live('pageshow', function(event) {
 		marks.push(new L.LatLng(point.latitude, point.longitude));
 		L.marker([point.latitude, point.longitude], {title: point.label, draggable: false})
 		.bindPopup(point.description).addTo(map);
-		console.log(point.description);
+		if (debug) console.log(point.description);
 		 
 	 });
 	 

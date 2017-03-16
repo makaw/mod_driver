@@ -24,6 +24,7 @@ class User {
 	
 	private $driver_role;
 	
+	private $authError;
 	
 	
    /*  konstruktor 
@@ -54,8 +55,8 @@ class User {
 		/* ustawienie referencji do zmiennych sesyjnych */
 	    $this->login = &$_SESSION['u_login'];
 	    $this->pass = &$_SESSION['u_pass'];
+	    $this->authError = &$_SESSION['u_autherror'];
 	    
-	    if (isset($_REQUEST['act']) && $_REQUEST['act']=="out")  $this->logOut();
 		
 		$this->auth($_REQUEST);
 		
@@ -77,7 +78,8 @@ class User {
 	   }	
 	   
 	   /*  przekazane parametry, wiec sprawdzenie loginu i hasla */
-	   if (!empty($this->login) && !empty($this->pass))  {
+	   if ((!empty($this->login) && !empty($this->pass))
+	   		|| (isset($input['submit']) && !empty($input['submit']))) {
 			
 			$query = "SELECT id, firstname, surname FROM sys_users "
 					."WHERE login=:login AND passwd=PASSWORD(:passwd) AND blocked<>'1' AND role=:role ;";
@@ -103,13 +105,26 @@ class User {
 			  $this->uid = 0;
 			  $this->firstname = null;
 			  $this->surname = null;
-	
+			  $this->authError = 1;
 			}   
 		    		 		
 		}	   		
 		
 	}	
 	
+	
+	public function isAuthError() {
+	
+		return $this->authError == 1;
+	
+	}
+	
+	
+	public function unsetAuthError() {
+	
+		$this->authError = null;
+	
+	}
 	
 	
 	/*  sprawdza czy zalogowany */

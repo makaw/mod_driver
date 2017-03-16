@@ -23,7 +23,21 @@ $('#mapPage').live('pagecreate', function(event) {
 	  $('#mapPage #userInfo').append('<span class="ui-icon ui-icon-user" style="display: inline-block; vertical-align:middle"/> '
 	   + data.items.user_info + '<br /><a href="index.php?act=out" style="float:right">[wyloguj]</a>');
 		
+	  // ustalenie pozycji mapy po wczytaniu danych do headera
+	  $('#mapPage #map').css({
+		  position: 'absolute',
+		  top: ($('#mapPage #mpHeader').outerHeight(true)) + 'px',
+		  right: '0',
+		  bottom: '0',
+		  left: '0',
+		  padding: '0 !important',
+		  'z-index': '99'
+	  });		
+	  
+	  
 	});	
+	
+
 	
 });
 
@@ -31,15 +45,6 @@ $('#mapPage').live('pagecreate', function(event) {
 $('#mapPage').live('pageshow', function(event) { 	
 
 
-	$('#mapPage #map').css({
-	    position: 'absolute',
-	    top: $('#mapPage #mpHeader').outerHeight(),
-	    right: '0',
-	    bottom: '0',
-	    left: '0',
-	    padding: '0 !important'
-	});
-	
 	
     var map = L.map('map');
 
@@ -49,7 +54,8 @@ $('#mapPage').live('pageshow', function(event) {
 		maxZoom: 16
     }).addTo(map);
      
-    map.locate({setView: false});   
+    map.locate({setView: false});      
+    
     
     var delivery_id = getUrlVars()["id"];
     

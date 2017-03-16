@@ -118,9 +118,9 @@ public function tplDeliveryDetailsMap($id) {
 /** Szablon formularza logowania */
 public function tplLoginForm($err = false) {
 
-	$this->error = !$err ? '' : '<div class="login_error">Nieprawidłowy login lub hasło.</div>';
+  $this->error = !$err ? '' : '<div class="login_error">Nieprawidłowy login lub hasło.</div>';
 
-	return $this->readTemplate('login_form.php');
+  return $this->readTemplate('login_form.php');
 
 }
 
@@ -128,15 +128,15 @@ public function tplLoginForm($err = false) {
 
 private function readTemplate($file) {
 
-	$error = $this->error;
-	$id = $this->id;
+  $error = $this->error;
+  $id = $this->id;
 	
-	ob_start();
-	require 'templates/'.$file;
-	$R = ob_get_contents();
-	ob_end_clean();
+  ob_start();
+  require 'templates/'.$file;
+  $R = ob_get_contents();
+  ob_end_clean();
 	
-	return $this->header . $R . $this->footer;
+  return $this->header . $R . $this->footer;
 	
 }
 

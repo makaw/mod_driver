@@ -6,7 +6,7 @@
 <div id="userInfo" style="float:right" data-role="content"></div>
 </div>
 
-<a id="bmap"  href="index.php?act=dm&id=<?php echo $id; ?>" data-icon="star"
+<a id="bmap"  href="index.php?act=dm&amp;id=<?php echo $id; ?>" data-icon="star"
 	data-role="button" class="ui-btn-right">Zobacz mapę</a>
 
 <div data-role="content">

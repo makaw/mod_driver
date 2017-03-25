@@ -19,7 +19,7 @@ $('#deliveriesListPage').live('pagecreate', function(event) {
 	})
 	
 	$.getJSON(serviceURL + 'get_user_info.php', function(data) {
-		console.log(data.items.user_info);
+		
       $('#deliveriesListPage #userInfo').empty();		
 	  $('#deliveriesListPage #userInfo').append('<span class="ui-icon ui-icon-user" style="display: inline-block; vertical-align:middle"/> '
 	   + data.items.user_info + '<br /><a href="index.php?act=out" style="float:right">[wyloguj]</a>');
